@@ -128,9 +128,9 @@ class _SearchScreenState extends State<SearchScreen>
                     (
                       builder: (context) => ProductInfoScreen
                       (
-                        productName: products[index]["name"]!,
-                        productImage: products[index]["image"]!,
-                        barcode: products[index]["barcode"]!,
+                        ProductName: products[index]["name"]!,
+                        ProductImage: products[index]["image"]!,
+                        Barcode: products[index]["barcode"]!,
                       ),
                     ),
                   );
