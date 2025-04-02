@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'product_info_screen.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 
 class SearchScreen extends StatefulWidget 
@@ -25,7 +26,12 @@ class _SearchScreenState extends State<SearchScreen>
     ProductSearchQueryConfiguration configuration = ProductSearchQueryConfiguration
     (
       version: ProductQueryVersion.v3,
-      fields: [ProductField.NAME, ProductField.IMAGE_FRONT_URL],
+      fields: 
+      [
+        ProductField.NAME, 
+        ProductField.IMAGE_FRONT_URL, 
+        ProductField.BARCODE
+      ],
       parametersList: [SearchTerms(terms: [query])],
       language: OpenFoodFactsLanguage.ENGLISH,
       country: OpenFoodFactsCountry.UNITED_KINGDOM,
@@ -45,6 +51,7 @@ class _SearchScreenState extends State<SearchScreen>
         {
           "name": product.productName ?? "Unknown",
           "image": product.imageFrontUrl ?? "assets/images/NoImage.png",
+          "barcode": product.barcode ?? "0000000000000", // Default barcode if missing
         }).toList();
         isLoading = false;
       });
@@ -102,47 +109,65 @@ class _SearchScreenState extends State<SearchScreen>
             padding: EdgeInsets.all(8),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount
             (
-              crossAxisCount: 2, // Two columns
+              crossAxisCount: 2,
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
-              childAspectRatio: 0.8, // Adjusts height of each item
+              childAspectRatio: 0.8,
             ),
             itemCount: products.length,
             itemBuilder: (context, index) 
             {
-              return Card
+              return GestureDetector
               (
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                elevation: 3,
-                child: Column
+                onTap: () 
+                {
+                  Navigator.push
+                  (
+                    context,
+                    MaterialPageRoute
+                    (
+                      builder: (context) => ProductInfoScreen
+                      (
+                        productName: products[index]["name"]!,
+                        productImage: products[index]["image"]!,
+                        barcode: products[index]["barcode"]!,
+                      ),
+                    ),
+                  );
+                },
+                child: Card
                 (
-                  children: 
-                  [
-                    Expanded
-                    (
-                      child: Image.network
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  elevation: 3,
+                  child: Column
+                  (
+                    children: 
+                    [
+                      Expanded
                       (
-                        products[index]["image"]!,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        errorBuilder: (context, error, stackTrace) 
-                        {
-                          // Fallback to a local image if the network image fails
-                          return Image.asset('assets/images/NoImage.png', fit: BoxFit.cover);
-                        },
+                        child: Image.network
+                        (
+                          products[index]["image"]!,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          errorBuilder: (context, error, stackTrace) 
+                          {
+                            return Image.asset('assets/images/NoImage.png', fit: BoxFit.cover);
+                          },
+                        ),
                       ),
-                    ),
-                    Padding
-                    (
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text
+                      Padding
                       (
-                        products[index]["name"]!,
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text
+                        (
+                          products[index]["name"]!,
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
