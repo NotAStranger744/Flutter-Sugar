@@ -75,11 +75,11 @@ class HomeScreen extends StatelessWidget
             (
               onPressed: () 
               {
-                // Navigate to the Daily Diet screen
-                //Navigator.push
+                //Navigate to the Daily Diet screen
+                Navigator.push
                 (
-                  //context,
-                  //MaterialPageRoute(builder: (context) => DietLogScreen()),
+                  context,
+                  MaterialPageRoute(builder: (context) => DietLogScreen()),
                 );
               },
               child: Text("Edit Today's Diet", style: TextStyle(fontSize: 16)),
