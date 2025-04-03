@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "938168868256",
+    "firebase_url": "https://flutter-sugar-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "flutter-sugar",
+    "storage_bucket": "flutter-sugar.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:938168868256:android:13678003b187216bb618c5",
+        "android_client_info": {
+          "package_name": "com.example.flutterapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpKtY4eTTqaEQvryKIsnP0WgI83tTxs_0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

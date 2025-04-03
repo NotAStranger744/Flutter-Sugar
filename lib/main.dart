@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'search_screen.dart';
-import 'product_info_screen.dart';
+import 'login_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() 
+void main() async 
 {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
+
+String? ActiveUser;
 
 class MyApp extends StatelessWidget 
 {
@@ -18,14 +25,65 @@ class MyApp extends StatelessWidget
     return MaterialApp
     (
       title: 'Flutter Sugar',
-      initialRoute: '/',
-      routes: 
-      {
-        '/': (context) => const MyHomePage(),
-      },
+      theme: BuildTheme(),
+      //default to login screen
+      home: LoginScreen(),
     );
   }
 }
+
+// Global app theme
+ThemeData BuildTheme() 
+  {
+    return ThemeData
+    (
+      appBarTheme: AppBarTheme
+      (
+        color: Colors.cyan,
+        titleTextStyle: TextStyle
+        (
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      
+      buttonTheme: ButtonThemeData
+      (
+        buttonColor: Colors.cyan,
+        shape: RoundedRectangleBorder
+        (
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: EdgeInsets.symmetric(vertical: 15),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData
+      (
+        style: ElevatedButton.styleFrom
+        (
+          backgroundColor: Colors.cyan,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder
+          (
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: EdgeInsets.symmetric(vertical: 15),
+          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData
+      (
+        style: TextButton.styleFrom
+        (
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.cyan,
+          
+          textStyle: TextStyle(color: Colors.white,fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }  
+
 
 class MyHomePage extends StatefulWidget 
 {
@@ -37,18 +95,19 @@ class MyHomePage extends StatefulWidget
 
 class _MyHomePageState extends State<MyHomePage> 
 {
-  int _selectedIndex = 0; // Default to Home screen
+  int SelectedIndex = 0; // Default to home page
 
-  final List<Widget> _screens = 
+  final List<Widget> Screens = //setting up screens navigatable by bottom bar
   [
-    const HomeScreen(),
+    HomeScreen(username: ''),
     SearchScreen(),
   ];
 
-  void _onItemTapped(int index) 
+  void OnItemTapped(int Index) 
   {
-    setState(() {
-      _selectedIndex = index;
+    setState(() 
+    {
+      SelectedIndex = Index; //Set screen index based upon navigation bar presses
     });
   }
 
@@ -61,19 +120,19 @@ class _MyHomePageState extends State<MyHomePage>
       (
         title: const Text('Flutter Sugar'),
       ),
-      body: _screens[_selectedIndex],
+      body: Screens[SelectedIndex],
       bottomNavigationBar: BottomNavigationBar
       (
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        currentIndex: SelectedIndex,
+        onTap: OnItemTapped, //set the index on tap
         items: const <BottomNavigationBarItem>
         [
-          BottomNavigationBarItem
+          BottomNavigationBarItem //Home screen button
           (
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem
+          BottomNavigationBarItem //Search screen button
           (
             icon: Icon(Icons.search),
             label: 'Search',

@@ -15,14 +15,14 @@ class ProductInfoScreen extends StatefulWidget
 
 class ProductInfoScreenState extends State<ProductInfoScreen> 
 {
-  bool isLoading = true;
-  String fat = "N/A";
-  String sugar = "N/A";
-  String energy = "N/A";
-  String quantity = "N/A";
-  String quantityUnit = "";
-  double quantityValue = 0;
-  double enteredQuantity = 0;
+  bool IsLoading = true;
+  String Fat = "N/A";
+  String Sugar = "N/A";
+  String Energy = "N/A";
+  String Quantity = "N/A";
+  String QuantityUnit = "";
+  double QuantityValue = 0;
+  double EnteredQuantity = 0;
 
   @override
   void initState() 
@@ -57,38 +57,38 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
     {
       setState(()
       {
-        fat = result.product!.nutriments!.getValue(Nutrient.fat, PerSize.oneHundredGrams)?.toStringAsFixed(1) ?? "N/A";
-        sugar = result.product!.nutriments!.getValue(Nutrient.sugars, PerSize.oneHundredGrams)?.toStringAsFixed(1) ?? "N/A";
-        energy = result.product!.nutriments!.getValue(Nutrient.energyKCal, PerSize.oneHundredGrams)?.toStringAsFixed(0) ?? "N/A";
-        quantity = result.product!.quantity ?? "N/A";
-        var quantityParsed = parseString(quantity);
-        quantityValue = quantityParsed["value"];
-        quantityUnit = quantityParsed["unit"];
+        Fat = result.product!.nutriments!.getValue(Nutrient.fat, PerSize.oneHundredGrams)?.toStringAsFixed(1) ?? "N/A";
+        Sugar = result.product!.nutriments!.getValue(Nutrient.sugars, PerSize.oneHundredGrams)?.toStringAsFixed(1) ?? "N/A";
+        Energy = result.product!.nutriments!.getValue(Nutrient.energyKCal, PerSize.oneHundredGrams)?.toStringAsFixed(0) ?? "N/A";
+        Quantity = result.product!.quantity ?? "N/A";
+        var QuantityParsed = parseString(Quantity);
+        QuantityValue = QuantityParsed["value"];
+        QuantityUnit = QuantityParsed["unit"];
 
-        isLoading = false;
+        IsLoading = false;
       });
     } 
     else 
     {
       setState(() 
       {
-        isLoading = false;
+        IsLoading = false;
       });
     }
   }
 
   Map<String, dynamic> parseString(String string) 
   {
-    List<String> parts = string.split(' '); 
+    List<String> Parts = string.split(' '); 
 
-    if (parts.isNotEmpty) 
+    if (Parts.isNotEmpty) 
     {
-      double? value = double.tryParse(parts[0]); 
-      String unit = parts.length > 1 ? parts.sublist(1).join(' ') : ""; 
+      double? Value = double.tryParse(Parts[0]); 
+      String Unit = Parts.length > 1 ? Parts.sublist(1).join(' ') : ""; 
 
-      if (value != null) 
+      if (Value != null) 
       {
-        return {"value": value, "unit": unit};
+        return {"value": Value, "unit": Unit};
       }
     }
     return {"value": 0, "unit": ""}; 
@@ -96,16 +96,16 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
 
   void addToDailyDiet() 
   {
-    double factor = enteredQuantity / 100;
-    double addedFat = double.parse(fat) * factor;
-    double addedSugar = double.parse(sugar) * factor;
-    double addedEnergy = double.parse(energy) * factor;
+    double Factor = EnteredQuantity / 100;
+    double AddedFat = double.parse(Fat) * Factor;
+    double AddedSugar = double.parse(Sugar) * Factor;
+    double AddedEnergy = double.parse(Energy) * Factor;
 
 
     // Here you can save the data to local storage or a database
     ScaffoldMessenger.of(context).showSnackBar
     (
-      SnackBar(content: Text("$enteredQuantity $quantityUnit of ${widget.ProductName} added to daily diet! Fat: ${addedFat.toStringAsFixed(2)} g, Sugar: ${addedSugar.toStringAsFixed(2)} g, Energy: ${addedEnergy.toStringAsFixed(2)} kcal.")),
+      SnackBar(content: Text("$EnteredQuantity $QuantityUnit of ${widget.ProductName} added to daily diet! Fat: ${AddedFat.toStringAsFixed(2)} g, Sugar: ${AddedSugar.toStringAsFixed(2)} g, Energy: ${AddedEnergy.toStringAsFixed(2)} kcal.")),
     );
   }
 
@@ -117,7 +117,7 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
       appBar: AppBar(title: Text(widget.ProductName)),
       body: Center
       (
-        child: isLoading 
+        child: IsLoading 
         ? CircularProgressIndicator()
         : Column
         (
@@ -138,11 +138,11 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
             SizedBox(height: 20),
             Text(widget.ProductName, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
             SizedBox(height: 20),
-            Text("Quantity: $quantity", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-            Text("Per 100 $quantityUnit:"),
-            Text("Fat: $fat g", style: TextStyle(fontSize: 18)),
-            Text("Sugar: $sugar g", style: TextStyle(fontSize: 18)),
-            Text("Energy: $energy kcal", style: TextStyle(fontSize: 18)),
+            Text("Quantity: $Quantity", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+            Text("Per 100 $QuantityUnit:"),
+            Text("Fat: $Fat g", style: TextStyle(fontSize: 18)),
+            Text("Sugar: $Sugar g", style: TextStyle(fontSize: 18)),
+            Text("Energy: $Energy kcal", style: TextStyle(fontSize: 18)),
             SizedBox(height: 20),
             Padding
             (
@@ -150,12 +150,12 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
               child: TextField
               (
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: "Enter quantity used ($quantityUnit)"),
+                decoration: InputDecoration(labelText: "Enter quantity used ($QuantityUnit)"),
                 onChanged: (value) 
                 {
                   setState(() 
                   {
-                    enteredQuantity = double.tryParse(value) ?? 0;
+                    EnteredQuantity = double.tryParse(value) ?? 0;
                   });
                 },
               ),
@@ -163,7 +163,7 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
             SizedBox(height: 20),
             ElevatedButton
             (
-              onPressed: enteredQuantity > 0 ? addToDailyDiet : null,
+              onPressed: EnteredQuantity > 0 ? addToDailyDiet : null,
               child: Text("Add to Daily Diet"),
             ),
           ],
