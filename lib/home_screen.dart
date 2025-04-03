@@ -38,7 +38,7 @@ class HomeScreen extends StatelessWidget
         padding: const EdgeInsets.all(0),
         child: Column
         (
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: 
           [
             // Title text at the top
@@ -52,11 +52,11 @@ class HomeScreen extends StatelessWidget
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 50), // Space between the title and the wheels
+            SizedBox(height: 30), // Space between the title and the wheels
             // Large Calorie Wheel at the Top
-            buildProgressWheel("Calories", calorieConsumed, calorieGoal, "kcal", size: 200),
+            BuildProgressWheel("Calories", calorieConsumed, calorieGoal, "kcal", size: 200),
 
-            SizedBox(height: 50),
+            SizedBox(height: 30),
 
             // Row with Fat and Sugar Wheels Below
             Row
@@ -64,22 +64,22 @@ class HomeScreen extends StatelessWidget
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: 
               [
-                buildProgressWheel("Fat", fatConsumed, fatGoal, "g", size: 150),
-                buildProgressWheel("Sugar", sugarConsumed, sugarGoal, "g", size: 150),
+                BuildProgressWheel("Fat", fatConsumed, fatGoal, "g", size: 150),
+                BuildProgressWheel("Sugar", sugarConsumed, sugarGoal, "g", size: 150),
               ],
             ),
 
-            SizedBox(height: 50),
+            SizedBox(height: 30),
             // Button to view the daily diet products
             ElevatedButton
             (
               onPressed: () 
               {
                 // Navigate to the Daily Diet screen
-                Navigator.push
+                //Navigator.push
                 (
-                  context,
-                  MaterialPageRoute(builder: (context) => DietLogScreen()),
+                  //context,
+                  //MaterialPageRoute(builder: (context) => DietLogScreen()),
                 );
               },
               child: Text("Edit Today's Diet", style: TextStyle(fontSize: 16)),
@@ -95,7 +95,7 @@ class HomeScreen extends StatelessWidget
     );
   }
 
-  Widget buildProgressWheel(String label, double consumed, double goal, String unit, {double size = 100}) 
+  Widget BuildProgressWheel(String label, double consumed, double goal, String unit, {double size = 100}) 
   {
     double progress = consumed / goal; // Normalize to a scale of 0-1
     bool exceeded = progress > 1.0; // Check if over goal
