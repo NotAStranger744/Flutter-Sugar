@@ -1,20 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
-import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget 
 {
+  const LoginScreen({super.key});
+
   @override
   LoginScreenState createState() => LoginScreenState();
 }
 
 class LoginScreenState extends State<LoginScreen> 
 {
+  //Controls text fields
   final TextEditingController UsernameController = TextEditingController();
   final TextEditingController PasswordController = TextEditingController();
   final FirebaseFirestore Firestore = FirebaseFirestore.instance; //Firestore Database instance
-  bool IsRegistering = false; // toggle between register and login mode
+  bool IsRegistering = false; //toggle between register and login mode
 
   Future<void> LoginOrRegister() async 
   {
@@ -38,11 +40,12 @@ class LoginScreenState extends State<LoginScreen>
             'FatGoal': "70",
             'SugarGoal': "50"
           });
+
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User registered!'))); //Confirmation message
-          // Store active user
+          //Store active user
           ActiveUser = Username;
 
-          // Navigate to HomeScreen
+          //Navigate to HomeScreen
           Navigator.pushReplacement
           (
             context,
@@ -67,7 +70,6 @@ class LoginScreenState extends State<LoginScreen>
           if (StoredPassword == Password) //If password matches
           {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login successful!')));
-            // Store active user
             ActiveUser = Username;
 
             // Navigate to HomeScreen

@@ -10,14 +10,14 @@ class HomeScreen extends StatefulWidget
   @override
   HomeScreenState createState() => HomeScreenState();
 }
+
+//Global editable goals
 String FatGoal = "0"; 
 String SugarGoal = "0"; 
 String CalorieGoal = "0"; 
 
 class HomeScreenState extends State<HomeScreen>
 {
-
-
   double FatConsumed = 0; 
   double SugarConsumed = 0;
   double CalorieConsumed = 0;
@@ -32,6 +32,7 @@ class HomeScreenState extends State<HomeScreen>
     LoadUserPrefs();
   }
   
+  //Get preferences from firestore database
   Future<void> LoadUserPrefs() async 
   {
     FirebaseFirestore Firestore = FirebaseFirestore.instance;
@@ -46,11 +47,13 @@ class HomeScreenState extends State<HomeScreen>
       {
         CalorieGoal = (data['CalorieGoal'] ?? 2000).toString();
         FatGoal = (data['FatGoal'] ?? 70).toString();
-        SugarGoal = (data['SugarGoal'] ?? 50).toString();
+        SugarGoal = (data['SugarGoal'] ?? 50).toString(); //Sets with potential default values
       });
     }
   }
 
+
+  //Gets diet summary based upon products that were added in the day
   Future<void> LoadDietLog() async 
   {
     FirebaseFirestore Firestore = FirebaseFirestore.instance;
@@ -73,6 +76,7 @@ class HomeScreenState extends State<HomeScreen>
     {
       var data = doc.data() as Map<String, dynamic>;
 
+      //Sum of all products
       totalFat += double.tryParse(data["fat"]?.toString() ?? "0") ?? 0;
       totalSugar += double.tryParse(data["sugar"]?.toString() ?? "0") ?? 0;
       totalCalories += double.tryParse(data["energy"]?.toString() ?? "0") ?? 0;
@@ -87,6 +91,7 @@ class HomeScreenState extends State<HomeScreen>
     });
   }
 
+  //When removing items
   void RefreshDietLog() 
   {
     LoadDietLog();
@@ -115,7 +120,7 @@ class HomeScreenState extends State<HomeScreen>
                 color: Colors.black,
               ),
             ),
-            // Title text at the top
+            //Title text at the top
             Text
             (
               "Your Daily Summary",
@@ -126,13 +131,13 @@ class HomeScreenState extends State<HomeScreen>
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 30), // Space between the title and the wheels
-            // Large Calorie Wheel at the Top
+            SizedBox(height: 30), //Space between the title and the wheels
+            //Large Calorie Wheel at the Top
             BuildProgressWheel("Calories", CalorieConsumed, double.parse(CalorieGoal), "kcal", size: 200),
 
             SizedBox(height: 30),
 
-            // Row with Fat and Sugar Wheels Below
+            //Row with Fat and Sugar Wheels Below
             Row
             (
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -144,24 +149,24 @@ class HomeScreenState extends State<HomeScreen>
             ),
 
             SizedBox(height: 30),
-            // Button to view the daily diet products
+            //Edit diet products button
             ElevatedButton
             (
               onPressed: () 
               {
-                //Navigate to the Daily Diet screen
+                //Navigate to the edit diet screen
                 Navigator.push
                 (
                   context,
                   MaterialPageRoute(builder: (context) => DietLogScreen(RefreshDietLog: RefreshDietLog)),
                 );
               },
-              child: Text("Edit Today's Diet", style: TextStyle(fontSize: 16)),
               style: ElevatedButton.styleFrom
               (
                 padding: EdgeInsets.symmetric(vertical: 12, horizontal: 50),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
               ),
+              child: Text("Edit Today's Diet", style: TextStyle(fontSize: 16)),
             )
           ],
         ),
@@ -169,11 +174,14 @@ class HomeScreenState extends State<HomeScreen>
     );
   }
 
-  Widget BuildProgressWheel(String label, double consumed, double goal, String unit, {double size = 100}) 
+  //Function to create the progress wheels of fat, sugar and carbs
+  Widget BuildProgressWheel(String label, double Consumed, double Goal, String unit, {double size = 100}) 
   {
-    double progress = consumed / goal; // Normalize to a scale of 0-1
-    bool exceeded = progress > 1.0; // Check if over goal
+    double Progress = Consumed / Goal; //Normalize to a scale of 0-1, or 0-100%
+    bool Exceeded = Progress > 1.0; //Check if over goal
 
+
+    //Logic for two circular wheels atop eachother. A normal progress and exceeded progress
     return Stack
     (
       alignment: Alignment.center,
@@ -183,23 +191,23 @@ class HomeScreenState extends State<HomeScreen>
         (
           width: size,
           height: size,
-          child: CircularProgressIndicator
+          child: CircularProgressIndicator //Progress toward goal
           (
-            value: exceeded ? 1.0 : progress, // Green progress up to goal
+            value: Exceeded ? 1.0 : Progress, 
             strokeWidth: size * 0.075,
             valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
             backgroundColor: Colors.grey.shade300,
           ),
         ),
-        if (exceeded)
+        if (Exceeded)
         SizedBox
         (
           width: size,
           height: size,
-          child: CircularProgressIndicator
+          child: CircularProgressIndicator //Exceeding allowance
           (
-            value: (consumed - goal) / goal, // Red for excess
-            strokeWidth: size * 0.1,
+            value: (Consumed - Goal) / Goal,
+            strokeWidth: size * 0.1, //Slightly larger
             valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
             backgroundColor: Colors.transparent,
           ),
@@ -207,10 +215,10 @@ class HomeScreenState extends State<HomeScreen>
         Column
         (
           mainAxisAlignment: MainAxisAlignment.center,
-          children: 
+          children: //Text within the progress circle for values.
           [
-            Text("$label", style: TextStyle(fontSize: size * 0.18, fontWeight: FontWeight.bold)),
-            Text("${consumed.toStringAsFixed(0)}/${goal.toStringAsFixed(0)} $unit", style: TextStyle(fontSize: size * 0.1)),
+            Text(label, style: TextStyle(fontSize: size * 0.18, fontWeight: FontWeight.bold)),
+            Text("${Consumed.toStringAsFixed(0)}/${Goal.toStringAsFixed(0)} $unit", style: TextStyle(fontSize: size * 0.1)),
           ],
         ),
       ],

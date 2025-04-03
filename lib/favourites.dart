@@ -76,7 +76,7 @@ class FavouritesScreenState extends State<FavouritesScreen>
 
       if (result.product != null) 
       {
-        Products.add(
+        Products.add( //Gather information for product card
         {
           "name": result.product!.productName ?? "Unknown",
           "image": result.product!.imageFrontUrl ?? "",
@@ -99,15 +99,15 @@ class FavouritesScreenState extends State<FavouritesScreen>
     (
       appBar: AppBar(title: Text("Favourites")),
       body: IsLoading
-      ? Center(child: CircularProgressIndicator())
+      ? Center(child: CircularProgressIndicator()) //If loading
       : FavouriteProducts.isEmpty
-      ? Center(child: Text("No favourite items yet!"))
+      ? Center(child: Text("No favourite items yet!")) //If empty
       : GridView.builder
       (
         padding: EdgeInsets.all(8),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount //Make a grid
         (
-          crossAxisCount: 2,
+          crossAxisCount: 2, //Of only two columns
           crossAxisSpacing: 8,
           mainAxisSpacing: 8,
           childAspectRatio: 0.8,
@@ -115,11 +115,11 @@ class FavouritesScreenState extends State<FavouritesScreen>
         itemCount: FavouriteProducts.length,
         itemBuilder: (context, index) 
         {
-          return GestureDetector
+          return GestureDetector //Detect swiping, tapping
           (
             onTap: () async 
             {
-              // Wait for ProductInfoScreen to return, then reload
+              //Display product info on tap
               await Navigator.push
               (
                 context,
@@ -133,12 +133,12 @@ class FavouritesScreenState extends State<FavouritesScreen>
                 ),
               );
 
-              // Reload favourites when returning
+              //Reload favourites when returning, in case of favourite removal
               LoadFavourites();
             },
-            child: Card
+            child: Card //Layout of the displayed favourites
             (
-              shape: RoundedRectangleBorder
+              shape: RoundedRectangleBorder //Rounded card
               (
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -147,14 +147,14 @@ class FavouritesScreenState extends State<FavouritesScreen>
               (
                 children: 
                 [
-                  Expanded
+                  Expanded //Image and product name
                   (
                     child: Image.network
                     (
                       FavouriteProducts[index]["image"]!,
                       fit: BoxFit.cover,
                       width: double.infinity,
-                      errorBuilder: (context, error, stackTrace) 
+                      errorBuilder: (context, error, stackTrace) //In case no image is found
                       {
                         return Image.asset
                         (
@@ -182,7 +182,7 @@ class FavouritesScreenState extends State<FavouritesScreen>
             ),
           );
         },
-      ),                   
+      ),
     );
   }
 }

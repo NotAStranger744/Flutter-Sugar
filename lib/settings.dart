@@ -1,16 +1,22 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'main.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends StatefulWidget 
+{
   const SettingsScreen({super.key});
 
   @override
   SettingsScreenState createState() => SettingsScreenState();
 }
 
-class SettingsScreenState extends State<SettingsScreen> {
+
+class SettingsScreenState extends State<SettingsScreen> 
+{
+  //Controllers for input fields
   final TextEditingController CalorieGoalController = TextEditingController();
   final TextEditingController FatGoalController = TextEditingController();
   final TextEditingController SugarGoalController = TextEditingController();
@@ -23,6 +29,7 @@ class SettingsScreenState extends State<SettingsScreen> {
     FetchGoals();
   }
 
+  //Places current values of each goal into its box - firebase
   Future<void> FetchGoals() async 
   {
     FirebaseFirestore Firestore = FirebaseFirestore.instance;
@@ -49,7 +56,7 @@ class SettingsScreenState extends State<SettingsScreen> {
   }
 
 
-  
+  //Sets what is in the box to the users firebase account as preferences
   Future<void> SaveGoals() async
   {
     FirebaseFirestore Firestore = FirebaseFirestore.instance;
@@ -73,6 +80,7 @@ class SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  //Sends the user back to the login screen
   Future<void> Logout(BuildContext context) async 
   {
     Navigator.pushReplacement
@@ -81,6 +89,7 @@ class SettingsScreenState extends State<SettingsScreen> {
       MaterialPageRoute(builder: (context) => LoginScreen()),
     );
   }
+
 
   @override
   Widget build(BuildContext context) 
@@ -92,14 +101,15 @@ class SettingsScreenState extends State<SettingsScreen> {
       (
         child: SingleChildScrollView
         (
-          padding: const EdgeInsets.all(16.0),
-          child: Column
+          padding: const EdgeInsets.all(15),
+          child: Column //Vertical structure
           (
             mainAxisAlignment: MainAxisAlignment.start,
             children: 
             [
-              // Title Text
-              Text(
+              //Title Text
+              Text
+              (
                 "Set Your Goals",
                 style: TextStyle
                 (
@@ -110,7 +120,7 @@ class SettingsScreenState extends State<SettingsScreen> {
               ),
               SizedBox(height: 30),
               
-              // Calorie Goal Field
+              //Calorie Goal Field
               TextField
               (
                 controller: CalorieGoalController,
@@ -123,7 +133,7 @@ class SettingsScreenState extends State<SettingsScreen> {
               ),
               SizedBox(height: 20),
 
-              // Fat Goal Field
+              //Fat Goal Field
               TextField(
                 controller: FatGoalController,
                 keyboardType: TextInputType.number,
@@ -135,7 +145,7 @@ class SettingsScreenState extends State<SettingsScreen> {
               ),
               SizedBox(height: 20),
 
-              // Sugar Goal Field
+              //Sugar Goal Field
               TextField
               (
                 controller: SugarGoalController,
@@ -148,7 +158,7 @@ class SettingsScreenState extends State<SettingsScreen> {
               ),
               SizedBox(height: 30),
 
-              // Save Button
+              //Save Button
               ElevatedButton
               (
                 onPressed: ()
@@ -159,25 +169,25 @@ class SettingsScreenState extends State<SettingsScreen> {
                     SnackBar(content: Text("Goals Saved!")),
                   );
                 },
-                child: Text("Save Goals"),
                 style: ElevatedButton.styleFrom
                 (
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 50),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                 ),
+                child: Text("Save Goals"),
               ),
               SizedBox(height: 30),
 
-              // Logout Button
+              //Logout Button
               ElevatedButton
               (
                 onPressed: () => Logout(context),
-                child: Text("Logout", style: TextStyle(fontSize: 16)),
                 style: ElevatedButton.styleFrom
                 (
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 50),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))
                 ),
+                child: Text("Logout", style: TextStyle(fontSize: 16)),
               ),
             ],
           ),

@@ -1,8 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutterapp/main.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'home_screen.dart';
 
 
 class ProductInfoScreen extends StatefulWidget 
@@ -107,6 +108,7 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
     } 
     catch (e) 
     {
+      // ignore: avoid_print
       print("Error fetching product details: $e"); //state what is wrong
     } 
     finally
@@ -170,7 +172,7 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
     //Output message of what was added
     ScaffoldMessenger.of(context).showSnackBar
     (
-      SnackBar(content: Text("$EnteredQuantity $QuantityUnit of ${ProductName} added to daily diet! Fat: ${AddedFat.toStringAsFixed(2)} g, Sugar: ${AddedSugar.toStringAsFixed(2)} g, Energy: ${AddedEnergy.toStringAsFixed(2)} kcal.")),
+      SnackBar(content: Text("$EnteredQuantity $QuantityUnit of $ProductName added to daily diet! Fat: ${AddedFat.toStringAsFixed(2)} g, Sugar: ${AddedSugar.toStringAsFixed(2)} g, Energy: ${AddedEnergy.toStringAsFixed(2)} kcal.")),
     );
   }
   void ToggleFavourite() async 
@@ -189,7 +191,7 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
       await FavouriteRef.delete(); // Remove from favourites if already added
       ScaffoldMessenger.of(context).showSnackBar
       (
-        SnackBar(content: Text("${ProductName} removed from favourites!")),
+        SnackBar(content: Text("$ProductName removed from favourites!")),
       );
     }
     else 
@@ -200,7 +202,7 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
       });
       ScaffoldMessenger.of(context).showSnackBar
       (
-        SnackBar(content: Text("${ProductName} added to favourites!")),
+        SnackBar(content: Text("$ProductName added to favourites!")),
       );
     }
 

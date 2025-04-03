@@ -5,9 +5,7 @@ import 'home_screen.dart';
 import 'search_screen.dart';
 import 'login_screen.dart';
 import 'scanner.dart';
-import 'settings.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async 
 {

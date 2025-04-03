@@ -14,13 +14,15 @@ class BarcodeScannerScreen extends StatefulWidget
 }
 
 
-class BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
-  String? _lastScannedBarcode; // To keep track of the last scanned barcode
+class BarcodeScannerScreenState extends State<BarcodeScannerScreen> 
+{
+  String? LastScannedBarcode; //To keep track of the last scanned barcode
 
   @override
   Widget build(BuildContext context) 
   {
-    return Scaffold(
+    return Scaffold
+    (
       appBar: AppBar(title: const Text('Scan Barcode')),
       body: MobileScanner
       (
@@ -30,23 +32,23 @@ class BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
 
           if (barcodes.isNotEmpty) 
           {
-            String scannedBarcode = barcodes.first.rawValue!;
+            String ScannedBarcode = barcodes.first.rawValue!;
 
-            // If the barcode is different from the last one, navigate
-            if (_lastScannedBarcode != scannedBarcode) 
+            //If the barcode is different from the last one, navigate
+            if (LastScannedBarcode != ScannedBarcode) 
             {
               setState(() 
               {
-                _lastScannedBarcode = scannedBarcode; // Update the last scanned barcode
+                LastScannedBarcode = ScannedBarcode; //This is now the last scanned barcode
               });
 
-              // Navigate to the ProductInfoScreen
+              //Navigate to the ProductInfoScreen
               Navigator.push
               (
                 context,
                 MaterialPageRoute
                 (
-                  builder: (context) => ProductInfoScreen(Barcode: scannedBarcode),
+                  builder: (context) => ProductInfoScreen(Barcode: ScannedBarcode),
                 ),
               );
             }
