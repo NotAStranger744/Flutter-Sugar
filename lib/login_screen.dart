@@ -14,7 +14,7 @@ class LoginScreenState extends State<LoginScreen>
   final TextEditingController UsernameController = TextEditingController();
   final TextEditingController PasswordController = TextEditingController();
   final FirebaseFirestore Firestore = FirebaseFirestore.instance; //Firestore Database instance
-  bool IsRegistering = true; // toggle between register and login mode
+  bool IsRegistering = false; // toggle between register and login mode
 
   Future<void> LoginOrRegister() async 
   {
@@ -43,7 +43,7 @@ class LoginScreenState extends State<LoginScreen>
           Navigator.pushReplacement
           (
             context,
-            MaterialPageRoute(builder: (context) => HomeScreen(username: Username)),
+            MaterialPageRoute(builder: (context) => HomePage()),
           );
         } 
         else 
@@ -71,7 +71,7 @@ class LoginScreenState extends State<LoginScreen>
             Navigator.pushReplacement
             (
               context,
-              MaterialPageRoute(builder: (context) => HomeScreen(username: Username)),
+              MaterialPageRoute(builder: (context) => HomePage()),
             );
           } 
           else //password doesnt match
@@ -102,115 +102,118 @@ class LoginScreenState extends State<LoginScreen>
         padding: const EdgeInsets.all(20.0), //Stop widgets touching the edge of the screen
         child: Center
         (
-          child: Column
+          child: SingleChildScrollView
           (
-            mainAxisSize: MainAxisSize.min, //Makes elements vertically central
-            children: 
-            [
-              Text //App name
-              (
-                'Flutter Sugar',
-                style: TextStyle
+            child: Column
+            (
+              mainAxisSize: MainAxisSize.min, //Makes elements vertically central
+              children: 
+              [
+                Text //App name
                 (
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 50), //Separate by 50 units from login options
-              Card //Place elements into a card, good for stylization and collecting related elements.
-              (
-                elevation: 20, //how far the card appears to be lifted from the app
-                shadowColor: Colors.cyan,
-                shape: RoundedRectangleBorder
-                (
-                  borderRadius: BorderRadius.circular(50), //how rounded the edges are
-                ),
-                child: Padding
-                (
-                  padding: const EdgeInsets.all(20.0), //Keep widgets away from the cards edges
-                  child: Column
+                  'Flutter Sugar',
+                  style: TextStyle
                   (
-                    mainAxisSize: MainAxisSize.min,
-                    children: 
-                    [
-                      //Username field
-                      TextField
-                      (
-                        controller: UsernameController,
-                        decoration: InputDecoration
-                        (
-                          labelText: 'Username',
-                          prefixIcon: Icon(Icons.person), //Picture of a person
-                          border: OutlineInputBorder
-                          (
-                            borderRadius: BorderRadius.circular(20), //rounding of edges
-                            borderSide: BorderSide(color: Colors.cyan),
-                          ),
-                        ),
-                        textInputAction: TextInputAction.next, //Proceeds to the password box
-                      ),
-
-                      SizedBox(height: 20), //Gap between fields
-
-                      //Password field
-                      TextField
-                      (
-                        controller: PasswordController,
-                        obscureText: true,
-                        decoration: InputDecoration
-                        (
-                          labelText: 'Password',
-                          prefixIcon: Icon(Icons.lock), //icon of a lock
-                          border: OutlineInputBorder
-                          (
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.cyan),
-                          ),
-                        ),
-                        textInputAction: TextInputAction.done, //closes the keyboard
-                      ),
-
-                      SizedBox(height: 20),
-
-                      //Login/Register Button
-                      ElevatedButton
-                      (
-                        onPressed: LoginOrRegister,
-                        style: ElevatedButton.styleFrom
-                        (
-                          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                          shape: RoundedRectangleBorder
-                          (
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        child: Text(IsRegistering ? 'Register' : 'Login'),
-                      ),
-
-                      SizedBox(height: 20),
-
-                      //Login/Register toggle
-                      TextButton
-                      (
-                        onPressed: () 
-                        {
-                          setState(() 
-                          {
-                            IsRegistering = !IsRegistering;
-                          });
-                        },
-                        child: Text
-                        (
-                          IsRegistering ? 'Already have an account? Login here' : 'Don\'t have an account? Register here',
-                        ),
-                      ),
-                    ],
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-            ],
-          ),
+                SizedBox(height: 50), //Separate by 50 units from login options
+                Card //Place elements into a card, good for stylization and collecting related elements.
+                (
+                  elevation: 20, //how far the card appears to be lifted from the app
+                  shadowColor: Colors.cyan,
+                  shape: RoundedRectangleBorder
+                  (
+                    borderRadius: BorderRadius.circular(50), //how rounded the edges are
+                  ),
+                  child: Padding
+                  (
+                    padding: const EdgeInsets.all(20.0), //Keep widgets away from the cards edges
+                    child: Column
+                    (
+                      mainAxisSize: MainAxisSize.min,
+                      children: 
+                      [
+                        //Username field
+                        TextField
+                        (
+                          controller: UsernameController,
+                          decoration: InputDecoration
+                          (
+                            labelText: 'Username',
+                            prefixIcon: Icon(Icons.person), //Picture of a person
+                            border: OutlineInputBorder
+                            (
+                              borderRadius: BorderRadius.circular(20), //rounding of edges
+                              borderSide: BorderSide(color: Colors.cyan),
+                            ),
+                          ),
+                          textInputAction: TextInputAction.next, //Proceeds to the password box
+                        ),
+
+                        SizedBox(height: 20), //Gap between fields
+
+                        //Password field
+                        TextField
+                        (
+                          controller: PasswordController,
+                          obscureText: true,
+                          decoration: InputDecoration
+                          (
+                            labelText: 'Password',
+                            prefixIcon: Icon(Icons.lock), //icon of a lock
+                            border: OutlineInputBorder
+                            (
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(color: Colors.cyan),
+                            ),
+                          ),
+                          textInputAction: TextInputAction.done, //closes the keyboard
+                        ),
+
+                        SizedBox(height: 20),
+
+                        //Login/Register Button
+                        ElevatedButton
+                        (
+                          onPressed: LoginOrRegister,
+                          style: ElevatedButton.styleFrom
+                          (
+                            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            shape: RoundedRectangleBorder
+                            (
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: Text(IsRegistering ? 'Register' : 'Login'),
+                        ),
+
+                        SizedBox(height: 20),
+
+                        //Login/Register toggle
+                        TextButton
+                        (
+                          onPressed: () 
+                          {
+                            setState(() 
+                            {
+                              IsRegistering = !IsRegistering;
+                            });
+                          },
+                          child: Text
+                          (
+                            IsRegistering ? 'Already have an account? Login here' : 'Don\'t have an account? Register here',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
         ),
       ),
     );

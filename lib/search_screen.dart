@@ -50,7 +50,7 @@ class _SearchScreenState extends State<SearchScreen>
         products = result.products!.map((product) => 
         {
           "name": product.productName ?? "Unknown",
-          "image": product.imageFrontUrl ?? "assets/images/NoImage.png",
+          "image": product.imageFrontUrl ?? "",
           "barcode": product.barcode ?? "0000000000000", // Default barcode if missing
         }).toList();
         isLoading = false;
@@ -128,6 +128,7 @@ class _SearchScreenState extends State<SearchScreen>
                     (
                       builder: (context) => ProductInfoScreen
                       (
+                        key: ValueKey(products[index]["barcode"]!),
                         ProductName: products[index]["name"]!,
                         ProductImage: products[index]["image"]!,
                         Barcode: products[index]["barcode"]!,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutterapp/diet_log.dart';
+import 'main.dart';
 import 'login_screen.dart';
 
 class HomeScreen extends StatelessWidget 
@@ -8,13 +9,12 @@ class HomeScreen extends StatelessWidget
   final double sugarGoal = 50; // Example target in grams
   final double calorieGoal = 2000; // Example target in kcal
 
-  final double fatConsumed = 90; // Example: Change these dynamically
-  final double sugarConsumed = 30;
-  final double calorieConsumed = 2200;
+  final double fatConsumed = 0; // Example: Change these dynamically
+  final double sugarConsumed = 0;
+  final double calorieConsumed = 0;
 
-  final String username;
 
-  const HomeScreen({super.key, required this.username});
+  const HomeScreen({super.key});
 
   Future<void> Logout(BuildContext context) async 
   {
@@ -76,10 +76,10 @@ class HomeScreen extends StatelessWidget
               onPressed: () 
               {
                 // Navigate to the Daily Diet screen
-                //Navigator.push
+                Navigator.push
                 (
-                  //context,
-                  //MaterialPageRoute(builder: (context) => DailyDietScreen()), // Placeholder for the diet screen
+                  context,
+                  MaterialPageRoute(builder: (context) => DietLogScreen()),
                 );
               },
               child: Text("Edit Today's Diet", style: TextStyle(fontSize: 16)),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/favourites.dart';
 import 'home_screen.dart';
 import 'search_screen.dart';
 import 'login_screen.dart';
@@ -85,22 +86,23 @@ ThemeData BuildTheme()
   }  
 
 
-class MyHomePage extends StatefulWidget 
+class HomePage extends StatefulWidget 
 {
-  const MyHomePage({super.key});
+  const HomePage({super.key});
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> 
+class HomePageState extends State<HomePage> 
 {
-  int SelectedIndex = 0; // Default to home page
+  int SelectedIndex = 1; // Default to home page
 
   final List<Widget> Screens = //setting up screens navigatable by bottom bar
   [
-    HomeScreen(username: ''),
     SearchScreen(),
+    HomeScreen(),
+    FavouritesScreen()
   ];
 
   void OnItemTapped(int Index) 
@@ -125,17 +127,26 @@ class _MyHomePageState extends State<MyHomePage>
       (
         currentIndex: SelectedIndex,
         onTap: OnItemTapped, //set the index on tap
+        selectedItemColor: Colors.cyan,
         items: const <BottomNavigationBarItem>
         [
-          BottomNavigationBarItem //Home screen button
-          (
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
           BottomNavigationBarItem //Search screen button
           (
             icon: Icon(Icons.search),
             label: 'Search',
+            backgroundColor: Colors.cyan,
+          ),
+          BottomNavigationBarItem //Home screen button
+          (
+            icon: Icon(Icons.home),
+            label: 'Home',
+            backgroundColor: Colors.cyan,
+          ),
+          BottomNavigationBarItem //Favourites screen button
+          (
+            icon: Icon(Icons.favorite),
+            label: 'Favourites',
+            backgroundColor: Colors.cyan,
           ),
         ],
       ),
