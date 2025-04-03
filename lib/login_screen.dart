@@ -34,9 +34,9 @@ class LoginScreenState extends State<LoginScreen>
           ({
             'username': Username,
             'password': Password,
-            'CalorieGoal': 2000,
-            'FatGoal': 70,
-            'SugarGoal': 50
+            'CalorieGoal': "2000",
+            'FatGoal': "70",
+            'SugarGoal': "50"
           });
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User registered!'))); //Confirmation message
           // Store active user

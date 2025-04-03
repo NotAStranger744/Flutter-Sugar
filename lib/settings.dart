@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
 import 'login_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'main.dart';
@@ -51,36 +50,28 @@ class SettingsScreenState extends State<SettingsScreen> {
 
 
   
-  Future<void> SaveGoals() async {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  Future<void> SaveGoals() async
+  {
+    FirebaseFirestore Firestore = FirebaseFirestore.instance;
 
-  // Parse the goal values as double before saving
-  double calorieGoal = double.tryParse(CalorieGoalController.text) ?? 2000;
-  double fatGoal = double.tryParse(FatGoalController.text) ?? 70;
-  double sugarGoal = double.tryParse(SugarGoalController.text) ?? 50;
+    final CalorieGoal = CalorieGoalController.text;
+    final FatGoal = FatGoalController.text;
+    final SugarGoal = SugarGoalController.text;
 
-  // Ensure we have valid values
-  print("Saving goals: CalorieGoal = $calorieGoal, FatGoal = $fatGoal, SugarGoal = $sugarGoal");
-
-  try {
-    // Update the user's goals in Firestore
-    DocumentReference goalRef = firestore.collection('users').doc(ActiveUser);
-
-    // Set the new goals (using update to modify existing fields)
-    await goalRef.update({
-      'CalorieGoal': calorieGoal,
-      'FatGoal': fatGoal,
-      'SugarGoal': sugarGoal,
+    
+    DocumentReference GoalRef = Firestore.collection('users').doc(ActiveUser);
+    await GoalRef.update(
+    {
+      'CalorieGoal': CalorieGoal,
+      'FatGoal': FatGoal,
+      'SugarGoal': SugarGoal,
     });
 
-    // Show success message
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Goals Saved!")));
-  } catch (e) {
-    // Handle error if the update fails
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to save goals!")));
-    print("Error saving goals: $e");
+    ScaffoldMessenger.of(context).showSnackBar
+    (
+      SnackBar(content: Text("Goals Saved!")),
+    );
   }
-}
 
   Future<void> Logout(BuildContext context) async 
   {
@@ -162,7 +153,7 @@ class SettingsScreenState extends State<SettingsScreen> {
               (
                 onPressed: ()
                 {
-                  SaveGoals;
+                  SaveGoals();
                   ScaffoldMessenger.of(context).showSnackBar
                   (
                     SnackBar(content: Text("Goals Saved!")),

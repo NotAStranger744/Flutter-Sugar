@@ -4,6 +4,7 @@ import 'package:flutterapp/settings.dart';
 import 'home_screen.dart';
 import 'search_screen.dart';
 import 'login_screen.dart';
+import 'scanner.dart';
 import 'settings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -105,6 +106,7 @@ class HomePageState extends State<HomePage>
     SettingsScreen(),
     SearchScreen(),
     HomeScreen(),
+    BarcodeScannerScreen(),
     FavouritesScreen()
   ];
 
@@ -149,6 +151,12 @@ class HomePageState extends State<HomePage>
           (
             icon: Icon(Icons.home),
             label: 'Home',
+            backgroundColor: Colors.cyan,
+          ),
+          BottomNavigationBarItem //Scanner button
+          (
+            icon: Icon(Icons.barcode_reader),
+            label: 'Scanner',
             backgroundColor: Colors.cyan,
           ),
           BottomNavigationBarItem //Favourites screen button

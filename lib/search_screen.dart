@@ -7,20 +7,20 @@ class SearchScreen extends StatefulWidget
   const SearchScreen({super.key});
 
   @override
-  _SearchScreenState createState() => _SearchScreenState();
+  SearchScreenState createState() => SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> 
+class SearchScreenState extends State<SearchScreen> 
 {
   String searchQuery = "";
-  List<Map<String, String>> products = [];
-  bool isLoading = false;
+  List<Map<String, String>> Products = [];
+  bool IsLoading = false;
 
   Future<void> fetchProducts(String query) async 
   {
     setState(() 
     {
-      isLoading = true;
+      IsLoading = true;
     });
     OpenFoodAPIConfiguration.userAgent = UserAgent(name: "Flutter Sugar");
     ProductSearchQueryConfiguration configuration = ProductSearchQueryConfiguration
@@ -39,7 +39,7 @@ class _SearchScreenState extends State<SearchScreen>
 
     final SearchResult result = await OpenFoodAPIClient.searchProducts
     (
-      User(userId: "cmason19", password: "FlutterPassword744"),
+      User(userId: "cmason19", password: "FlutterPassword744"), //API Requires a login
       configuration,
     );
 
@@ -47,24 +47,25 @@ class _SearchScreenState extends State<SearchScreen>
     {
       setState(() 
       {
-        products = result.products!.map((product) => 
+        Products = result.products!.map((product) => 
         {
           "name": product.productName ?? "Unknown",
           "image": product.imageFrontUrl ?? "",
-          "barcode": product.barcode ?? "0000000000000", // Default barcode if missing
+          "barcode": product.barcode ?? "0000000000000", // Default values if missing
         }).toList();
-        isLoading = false;
+        IsLoading = false;
       });
     } 
     else 
     {
       setState(() 
       {
-        products = [];
-        isLoading = false;
+        Products = [];
+        IsLoading = false;
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) 
@@ -76,7 +77,7 @@ class _SearchScreenState extends State<SearchScreen>
         Padding
         (
           padding: const EdgeInsets.all(8.0),
-          child: TextField
+          child: TextField //Search Bar
           (
             onChanged: (value) 
             {
@@ -102,41 +103,39 @@ class _SearchScreenState extends State<SearchScreen>
         ),
         Expanded
         (
-          child: isLoading 
-          ? Center(child: CircularProgressIndicator())
+          child: IsLoading 
+          ? Center(child: CircularProgressIndicator()) //Loading symbol after search
           : GridView.builder
           (
             padding: EdgeInsets.all(8),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount //Grid layout of items
             (
               crossAxisCount: 2,
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
               childAspectRatio: 0.8,
             ),
-            itemCount: products.length,
+            itemCount: Products.length,
             itemBuilder: (context, index) 
             {
               return GestureDetector
               (
                 onTap: () 
                 {
-                  Navigator.push
+                  Navigator.push  //When item pressed, go to details page of the product
                   (
                     context,
                     MaterialPageRoute
                     (
                       builder: (context) => ProductInfoScreen
                       (
-                        key: ValueKey(products[index]["barcode"]!),
-                        ProductName: products[index]["name"]!,
-                        ProductImage: products[index]["image"]!,
-                        Barcode: products[index]["barcode"]!,
+                        key: ValueKey(Products[index]["barcode"]!),
+                        Barcode: Products[index]["barcode"]!,
                       ),
                     ),
                   );
                 },
-                child: Card
+                child: Card //Each card within the grid contains
                 (
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   elevation: 3,
@@ -146,9 +145,9 @@ class _SearchScreenState extends State<SearchScreen>
                     [
                       Expanded
                       (
-                        child: Image.network
+                        child: Image.network //An image
                         (
-                          products[index]["image"]!,
+                          Products[index]["image"]!,
                           fit: BoxFit.cover,
                           width: double.infinity,
                           errorBuilder: (context, error, stackTrace) 
@@ -160,9 +159,9 @@ class _SearchScreenState extends State<SearchScreen>
                       Padding
                       (
                         padding: const EdgeInsets.all(8.0),
-                        child: Text
+                        child: Text //And the product name
                         (
-                          products[index]["name"]!,
+                          Products[index]["name"]!,
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),

@@ -10,9 +10,9 @@ class HomeScreen extends StatefulWidget
   @override
   HomeScreenState createState() => HomeScreenState();
 }
-double FatGoal = 70; 
-double SugarGoal = 50; 
-double CalorieGoal = 2000; 
+String FatGoal = "0"; 
+String SugarGoal = "0"; 
+String CalorieGoal = "0"; 
 
 class HomeScreenState extends State<HomeScreen>
 {
@@ -29,9 +29,30 @@ class HomeScreenState extends State<HomeScreen>
   {
     super.initState();
     LoadDietLog();
+    LoadUserPrefs();
+  }
+  
+  Future<void> LoadUserPrefs() async 
+  {
+    FirebaseFirestore Firestore = FirebaseFirestore.instance;
+
+    DocumentSnapshot UserDoc = await Firestore.collection('users').doc(ActiveUser).get();
+
+    if (UserDoc.exists) 
+    {
+      var data = UserDoc.data() as Map<String, dynamic>;
+
+      setState(() //Updates UI automatically
+      {
+        CalorieGoal = (data['CalorieGoal'] ?? 2000).toString();
+        FatGoal = (data['FatGoal'] ?? 70).toString();
+        SugarGoal = (data['SugarGoal'] ?? 50).toString();
+      });
+    }
   }
 
-  Future<void> LoadDietLog() async {
+  Future<void> LoadDietLog() async 
+  {
     FirebaseFirestore Firestore = FirebaseFirestore.instance;
     DateTime TimeNow = DateTime.now();
     DateTime StartOfDay = DateTime(TimeNow.year, TimeNow.month, TimeNow.day, 0, 0, 0); // Midnight
@@ -84,6 +105,16 @@ class HomeScreenState extends State<HomeScreen>
           mainAxisAlignment: MainAxisAlignment.start,
           children: 
           [
+            Text //Welcome text
+            (
+              "Hello, $ActiveUser",
+              style: TextStyle
+              (
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
             // Title text at the top
             Text
             (
@@ -97,7 +128,7 @@ class HomeScreenState extends State<HomeScreen>
             ),
             SizedBox(height: 30), // Space between the title and the wheels
             // Large Calorie Wheel at the Top
-            BuildProgressWheel("Calories", CalorieConsumed, CalorieGoal, "kcal", size: 200),
+            BuildProgressWheel("Calories", CalorieConsumed, double.parse(CalorieGoal), "kcal", size: 200),
 
             SizedBox(height: 30),
 
@@ -107,8 +138,8 @@ class HomeScreenState extends State<HomeScreen>
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: 
               [
-                BuildProgressWheel("Fat", FatConsumed, FatGoal, "g", size: 150),
-                BuildProgressWheel("Sugar", SugarConsumed, SugarGoal, "g", size: 150),
+                BuildProgressWheel("Fat", FatConsumed, double.parse(FatGoal), "g", size: 150),
+                BuildProgressWheel("Sugar", SugarConsumed, double.parse(SugarGoal), "g", size: 150),
               ],
             ),
 

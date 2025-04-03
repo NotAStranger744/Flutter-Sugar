@@ -7,17 +7,13 @@ import 'home_screen.dart';
 
 class ProductInfoScreen extends StatefulWidget 
 {
-  final String ProductName;
-  final String ProductImage;
   final String Barcode;
 
-  const ProductInfoScreen({super.key, required this.ProductName, required this.ProductImage, required this.Barcode});
+  const ProductInfoScreen({super.key, required this.Barcode});
 
   @override
   ProductInfoScreenState createState() => ProductInfoScreenState();
 }
-
-
 
 
 class ProductInfoScreenState extends State<ProductInfoScreen> 
@@ -31,6 +27,8 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
   String QuantityUnit = "";
   double QuantityValue = 0;
   double EnteredQuantity = 0;
+  String ProductName = "";
+  String ProductImage = "";
 
   @override
   void initState() 
@@ -56,13 +54,15 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
   {
     setState(() 
     {
-    IsLoading = true;
-    Fat = "N/A";
-    Sugar = "N/A";
-    Energy = "N/A";
-    Quantity = "N/A";
-    QuantityUnit = "";
-    QuantityValue = 0;
+      IsLoading = true;
+      Fat = "N/A";
+      Sugar = "N/A";
+      Energy = "N/A";
+      Quantity = "N/A";
+      QuantityUnit = "";
+      QuantityValue = 0;
+      ProductName = "";
+      ProductImage = "";
     });
 
     OpenFoodAPIConfiguration.userAgent = UserAgent(name: "Flutter Sugar");
@@ -73,6 +73,8 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
       version: ProductQueryVersion.v3,
       fields: 
       [
+        ProductField.NAME, 
+        ProductField.IMAGE_FRONT_URL, 
         ProductField.NUTRIMENTS,
         ProductField.QUANTITY,
       ],
@@ -89,6 +91,9 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
         setState(() 
         {
           //get details
+          ProductName = result.product!.productName ?? "Unknown Product";
+          ProductImage = result.product!.imageFrontUrl ?? "";
+
           Fat = result.product!.nutriments!.getValue(Nutrient.fat, PerSize.oneHundredGrams)?.toStringAsFixed(1) ?? "N/A";
           Sugar = result.product!.nutriments!.getValue(Nutrient.sugars, PerSize.oneHundredGrams)?.toStringAsFixed(1) ?? "N/A";
           Energy = result.product!.nutriments!.getValue(Nutrient.energyKCal, PerSize.oneHundredGrams)?.toStringAsFixed(0) ?? "N/A";
@@ -109,7 +114,6 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
       setState(() 
       {
         IsLoading = false; // Ensure loading stops
-          
       });
     }
   }
@@ -153,8 +157,8 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
     await ProductRef.set(
     {
       "barcode": widget.Barcode,
-      "product_name": widget.ProductName,
-      "product_image": widget.ProductImage,
+      "product_name": ProductName,
+      "product_image": ProductImage,
       "quantity_used": EnteredQuantity,
       "quantity_unit": QuantityUnit,
       "fat": AddedFat.toStringAsFixed(2),
@@ -166,7 +170,7 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
     //Output message of what was added
     ScaffoldMessenger.of(context).showSnackBar
     (
-      SnackBar(content: Text("$EnteredQuantity $QuantityUnit of ${widget.ProductName} added to daily diet! Fat: ${AddedFat.toStringAsFixed(2)} g, Sugar: ${AddedSugar.toStringAsFixed(2)} g, Energy: ${AddedEnergy.toStringAsFixed(2)} kcal.")),
+      SnackBar(content: Text("$EnteredQuantity $QuantityUnit of ${ProductName} added to daily diet! Fat: ${AddedFat.toStringAsFixed(2)} g, Sugar: ${AddedSugar.toStringAsFixed(2)} g, Energy: ${AddedEnergy.toStringAsFixed(2)} kcal.")),
     );
   }
   void ToggleFavourite() async 
@@ -185,7 +189,7 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
       await FavouriteRef.delete(); // Remove from favourites if already added
       ScaffoldMessenger.of(context).showSnackBar
       (
-        SnackBar(content: Text("${widget.ProductName} removed from favourites!")),
+        SnackBar(content: Text("${ProductName} removed from favourites!")),
       );
     }
     else 
@@ -196,7 +200,7 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
       });
       ScaffoldMessenger.of(context).showSnackBar
       (
-        SnackBar(content: Text("${widget.ProductName} added to favourites!")),
+        SnackBar(content: Text("${ProductName} added to favourites!")),
       );
     }
 
@@ -211,7 +215,7 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
   {
     return Scaffold
     (
-      appBar: AppBar(title: Text(widget.ProductName)),
+      appBar: AppBar(title: Text(ProductName)),
       body: Center
       (
         child: SingleChildScrollView
@@ -226,7 +230,7 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
               //show image
               Image.network
               (
-                widget.ProductImage,
+                ProductImage,
                 fit: BoxFit.cover,
                 width: 200,
                 height: 200,
@@ -239,7 +243,7 @@ class ProductInfoScreenState extends State<ProductInfoScreen>
 
               //output results
               SizedBox(height: 10),
-              Text(widget.ProductName, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+              Text(ProductName, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
               SizedBox(height: 10),
               Text("Quantity: $Quantity", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
               Text("Per 100 $QuantityUnit:"),
