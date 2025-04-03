@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutterapp/favourites.dart';
+import 'package:flutterapp/settings.dart';
 import 'home_screen.dart';
 import 'search_screen.dart';
 import 'login_screen.dart';
+import 'settings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -96,10 +98,11 @@ class HomePage extends StatefulWidget
 
 class HomePageState extends State<HomePage> 
 {
-  int SelectedIndex = 1; // Default to home page
+  int SelectedIndex = 2; // Default to home page
 
   final List<Widget> Screens = //setting up screens navigatable by bottom bar
   [
+    SettingsScreen(),
     SearchScreen(),
     HomeScreen(),
     FavouritesScreen()
@@ -127,9 +130,15 @@ class HomePageState extends State<HomePage>
       (
         currentIndex: SelectedIndex,
         onTap: OnItemTapped, //set the index on tap
-        selectedItemColor: Colors.cyan,
+        selectedItemColor: Colors.white,
         items: const <BottomNavigationBarItem>
         [
+          BottomNavigationBarItem //Settings screen button
+          (
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+            backgroundColor: Colors.cyan,
+          ),
           BottomNavigationBarItem //Search screen button
           (
             icon: Icon(Icons.search),

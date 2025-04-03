@@ -48,7 +48,7 @@ class DietLogScreenState extends State<DietLogScreen>
         "energy": data["energy"] ?? "0",
         "barcode": data["barcode"] ?? "0000000000000",
         "timestamp": data["timestamp"],
-        "doc_id": doc.id, // Store the document ID (Unix timestamp) for deletion
+        "doc_id": doc.id, //Store the document ID (Unix timestamp) for deletion
       });
     }
 
@@ -63,7 +63,7 @@ class DietLogScreenState extends State<DietLogScreen>
   {
     FirebaseFirestore Firestore = FirebaseFirestore.instance;
 
-    // Remove the item from the diet log
+    //Remove the item from the diet log
     await Firestore
     .collection("users")
     .doc(ActiveUser)
@@ -71,7 +71,7 @@ class DietLogScreenState extends State<DietLogScreen>
     .doc(docId)
     .delete();
 
-    // Reload the diet log
+    //Reload the diet log
     LoadDietLog();
     widget.RefreshDietLog();
   }

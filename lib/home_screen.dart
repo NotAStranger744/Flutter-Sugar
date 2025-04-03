@@ -10,15 +10,15 @@ class HomeScreen extends StatefulWidget
   @override
   HomeScreenState createState() => HomeScreenState();
 }
-
+double FatGoal = 70; 
+double SugarGoal = 50; 
+double CalorieGoal = 2000; 
 
 class HomeScreenState extends State<HomeScreen>
 {
-  double FatGoal = 70; // Example target in grams
-  double SugarGoal = 50; // Example target in grams
-  double CalorieGoal = 2000; // Example target in kcal
 
-  double FatConsumed = 0; // Example: Change these dynamically
+
+  double FatConsumed = 0; 
   double SugarConsumed = 0;
   double CalorieConsumed = 0;
 
