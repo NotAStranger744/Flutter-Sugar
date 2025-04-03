@@ -5,7 +5,9 @@ import 'main.dart';
 
 class DietLogScreen extends StatefulWidget 
 {
-  const DietLogScreen({super.key});
+  final Function RefreshDietLog;
+
+  const DietLogScreen({super.key, required this.RefreshDietLog});
 
   @override
   DietLogScreenState createState() => DietLogScreenState();
@@ -14,7 +16,7 @@ class DietLogScreen extends StatefulWidget
 class DietLogScreenState extends State<DietLogScreen> 
 {
   List<Map<String, dynamic>> DailyDiet = [];
-  bool isLoading = true;
+  bool IsLoading = true;
 
   @override
   void initState() 
@@ -53,11 +55,11 @@ class DietLogScreenState extends State<DietLogScreen>
     setState(() 
     {
       DailyDiet = products;
-      isLoading = false;
+      IsLoading = false;
     });
   }
 
-  Future<void> removeItemFromDiet(String docId) async 
+  Future<void> RemoveItemFromDiet(String docId) async 
   {
     FirebaseFirestore Firestore = FirebaseFirestore.instance;
 
@@ -71,6 +73,7 @@ class DietLogScreenState extends State<DietLogScreen>
 
     // Reload the diet log
     LoadDietLog();
+    widget.RefreshDietLog();
   }
 
   @override
@@ -79,7 +82,7 @@ class DietLogScreenState extends State<DietLogScreen>
     return Scaffold
     (
       appBar: AppBar(title: Text("Daily Diet Log")),
-      body: isLoading ? Center(child: CircularProgressIndicator()) : DailyDiet.isEmpty ? //loading symbol 
+      body: IsLoading ? Center(child: CircularProgressIndicator()) : DailyDiet.isEmpty ? //loading symbol 
         Center(child: Text("No items added today")) : ListView.builder //if empty
         (
           itemCount: DailyDiet.length,
@@ -119,7 +122,7 @@ class DietLogScreenState extends State<DietLogScreen>
                 trailing: IconButton
                 (
                   icon: Icon(Icons.delete, color: Colors.red),
-                  onPressed: () => removeItemFromDiet(Item["doc_id"]),
+                  onPressed: () => RemoveItemFromDiet(Item["doc_id"]),
                 ),
               ),
             );

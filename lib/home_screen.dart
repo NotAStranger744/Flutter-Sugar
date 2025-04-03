@@ -1,32 +1,75 @@
 import 'package:flutter/material.dart';
 import 'package:flutterapp/diet_log.dart';
 import 'main.dart';
-import 'login_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class HomeScreen extends StatelessWidget 
+class HomeScreen extends StatefulWidget
 {
-  final double fatGoal = 70; // Example target in grams
-  final double sugarGoal = 50; // Example target in grams
-  final double calorieGoal = 2000; // Example target in kcal
-
-  final double fatConsumed = 0; // Example: Change these dynamically
-  final double sugarConsumed = 0;
-  final double calorieConsumed = 0;
-
-
   const HomeScreen({super.key});
 
-  Future<void> Logout(BuildContext context) async 
-  {
+  @override
+  HomeScreenState createState() => HomeScreenState();
+}
 
-    // Navigate back to login screen
-    Navigator.pushReplacement
-    (
-      context,
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-    );
+
+class HomeScreenState extends State<HomeScreen>
+{
+  double FatGoal = 70; // Example target in grams
+  double SugarGoal = 50; // Example target in grams
+  double CalorieGoal = 2000; // Example target in kcal
+
+  double FatConsumed = 0; // Example: Change these dynamically
+  double SugarConsumed = 0;
+  double CalorieConsumed = 0;
+
+  bool IsLoading = true;
+
+  @override
+  void initState() 
+  {
+    super.initState();
+    LoadDietLog();
   }
 
+  Future<void> LoadDietLog() async {
+    FirebaseFirestore Firestore = FirebaseFirestore.instance;
+    DateTime TimeNow = DateTime.now();
+    DateTime StartOfDay = DateTime(TimeNow.year, TimeNow.month, TimeNow.day, 0, 0, 0); // Midnight
+
+    // Query for items added today
+    QuerySnapshot Query = await Firestore
+    .collection("users")
+    .doc(ActiveUser)
+    .collection("dietlog")
+    .where("timestamp", isGreaterThanOrEqualTo: StartOfDay)
+    .get();
+
+    double totalFat = 0;
+    double totalSugar = 0;
+    double totalCalories = 0;
+
+    for (var doc in Query.docs) 
+    {
+      var data = doc.data() as Map<String, dynamic>;
+
+      totalFat += double.tryParse(data["fat"]?.toString() ?? "0") ?? 0;
+      totalSugar += double.tryParse(data["sugar"]?.toString() ?? "0") ?? 0;
+      totalCalories += double.tryParse(data["energy"]?.toString() ?? "0") ?? 0;
+    }
+
+    setState(() 
+    {
+      FatConsumed = totalFat;
+      SugarConsumed = totalSugar;
+      CalorieConsumed = totalCalories;
+      IsLoading = false;
+    });
+  }
+
+  void RefreshDietLog() 
+  {
+    LoadDietLog();
+  }
 
   @override
   Widget build(BuildContext context) 
@@ -54,7 +97,7 @@ class HomeScreen extends StatelessWidget
             ),
             SizedBox(height: 30), // Space between the title and the wheels
             // Large Calorie Wheel at the Top
-            BuildProgressWheel("Calories", calorieConsumed, calorieGoal, "kcal", size: 200),
+            BuildProgressWheel("Calories", CalorieConsumed, CalorieGoal, "kcal", size: 200),
 
             SizedBox(height: 30),
 
@@ -64,8 +107,8 @@ class HomeScreen extends StatelessWidget
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: 
               [
-                BuildProgressWheel("Fat", fatConsumed, fatGoal, "g", size: 150),
-                BuildProgressWheel("Sugar", sugarConsumed, sugarGoal, "g", size: 150),
+                BuildProgressWheel("Fat", FatConsumed, FatGoal, "g", size: 150),
+                BuildProgressWheel("Sugar", SugarConsumed, SugarGoal, "g", size: 150),
               ],
             ),
 
@@ -79,7 +122,7 @@ class HomeScreen extends StatelessWidget
                 Navigator.push
                 (
                   context,
-                  MaterialPageRoute(builder: (context) => DietLogScreen()),
+                  MaterialPageRoute(builder: (context) => DietLogScreen(RefreshDietLog: RefreshDietLog)),
                 );
               },
               child: Text("Edit Today's Diet", style: TextStyle(fontSize: 16)),
